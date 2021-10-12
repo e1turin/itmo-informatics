@@ -1,0 +1,192 @@
+\documentclass[14pt,final,oneside]{extreport}
+
+\usepackage[a4paper, mag=1000, left=2.5cm, right=1cm, top=2cm, bottom=2cm, headsep=0.7cm, footskip=1cm]{geometry}
+
+% {{{ babel c языковым пакетом не должны быть первым импортируемым пакетом
+\usepackage[utf8]{inputenc}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[russian]{babel}
+% }}}
+
+
+\usepackage{cmap} %поиск в pdf
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathtext}
+
+\usepackage{indentfirst}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks]{hyperref} % использование ссылок
+\usepackage{listings} % использование листингов
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}} 
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+\lstset{% настройки вида листинга
+inputencoding=utf8, extendedchars=\true, keepspaces = true, % поддержка кириллицы и пробелов в комментариях
+language=Pascal,            % выбор языка для подсветки (здесь это Pascal)
+basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+numbers=left,               % где поставить нумерацию строк (слева\справа)
+numberstyle=\tiny,          % размер шрифта для номеров строк
+stepnumber=1,               % размер шага между двумя номерами строк
+numbersep=5pt,              % как далеко отстоят номера строк от подсвечиваемого кода
+backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+showspaces=false,           % показывать или нет пробелы специальными отступами
+showstringspaces=false,     % показывать илигнет пробелы в строках
+showtabs=false,             % показывать или нет табуляцию в строках
+frame=single,               % рисовать рамку вокруг кода
+tabsize=2,                  % размер табуляции по умолчанию равен 2 пробелам
+captionpos=t,               % позиция заголовка вверху [t] или внизу [b] 
+breaklines=true,            % автоматически переносить строки (да\нет)
+breakatwhitespace=false,    % переносить строки только если есть пробел
+escapeinside={\%*}{*)}      % если нужно добавить комментарии в коде
+}
+
+\sloppy % Решение проблем с переносами (с. 119 Nabor-i...)
+\emergencystretch=25pt
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% КОМАНДЫ {Для соответствия ГОСТ}%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\Section[1]{
+    \refstepcounter{section}
+    \section*{\raggedright
+        \arabic{chapter}.\arabic{section}. #1}
+    \addcontentsline{toc}{section}{%
+        \arabic{chapter}.\arabic{section}. #1}
+}
+
+\newcommand\Subsection[1]{
+    \refstepcounter{subsection}
+    \subsection*{\raggedright
+        \arabic{chapter}.\arabic{section}.\arabic{subsection}. #1}
+    \addcontentsline{toc}{subsection}{%
+        \arabic{chapter}.\arabic{section}.\arabic{subsection}. #1}
+}
+
+
+\newcommand\Chapter[1]{
+    \refstepcounter{chapter}
+    \chapter*{
+        \begin{huge}
+        \textbf{\chaptername\ \arabic{chapter}\\}
+        \end{huge}%
+        \bigskip \bigskip
+        \raggedright #1}
+    \addcontentsline{toc}{chapter}{\arabic{chapter}. #1}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%% КОМАНДЫ %%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% ПЕРЕМЕННЫЕ {{{ %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\student{Тюрин Иван Николаевич} % определение ФИО студента, выполнившего работу
+\newcommand\studygroup{P3110} % определение учебной группы студента, выполнившего работу
+\newcommand\variant{№ 335047}
+\newcommand\subject{Информатика}
+\newcommand\teacher{Балакшин П. В.,\\
+                    Рудникова Т. В.}
+
+\newcommand\labname{Синтез помехоустойчивого кода}
+%%%%%%%%%%%%%%%%%%%%%%%%%% }}} ПЕРЕМЕННЫЕ %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Переоформление некоторых стандартных названий
+%\renewcommand{\chaptername}{Лабораторная работа}
+\renewcommand{\chaptername}{Лабораторная работа} % переименование глав
+\def\contentsname{Содержание} % переименование оглавления
+
+
+% Оформление титульного листа
+\begin{titlepage}
+
+    % Название университета
+    \begin{center}
+    \textsc{Национальный исследовательский университет ИТМО\\[5mm]
+    Факультет программной инженерии и компьютерной техники\\[2mm]
+    Кафедра вычислительной техники}
+
+    \vfill
+    \vfill
+    % Название работы
+    \textbf{ОТЧЁТ ПО ЛАБОРАТОРНОЙ РАБОТЕ\\[3mm]
+    курса <<\subject>> \\[6mm]
+    Вариант \variant
+    \\[20mm]
+    }
+    \end{center}
+
+
+\hfill
+\hfill
+
+    % Информация об авторе работы и проверяющем
+    \begin{flushright}
+        \begin{minipage}{.5\textwidth}
+            
+        Выполнил студент:\\[2mm] 
+        \student\\[2mm]
+        группа: \studygroup\\[5mm]
+
+        Преподаватель:\\[2mm] 
+        \teacher
+
+        \end{minipage}%
+    \end{flushright}
+
+\vfill
+
+    % Нижний колонтитул первой страницы
+    \begin{center}
+        Санк-Петербург, \the\year\,г.
+    \end{center}
+
+\end{titlepage}
+
+
+% Содержание
+\tableofcontents
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%% ХОД РАБОТЫ {{{ %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Chapter{\labname}
+\Section{Задача варианта \variant}
+
+\Section{Ход работы}
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%% }}} ХОД РАБОТЫ %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%% СПИСОК ЛИТЕРАТУРЫ {{{ %%%%%%%%%%%%%%%%%%%%%
+% Для отчёта он не обязателен
+
+\begin{thebibliography}{9}
+
+    \bibitem{gutgut:1} 
+    Гутман~Г.~Н. Лабораторные работы по курсу <<Языки и методы программирования>> (семестр 2). URL: \url{http://pm.samgtu.ru/sites/pm.samgtu.ru/files/materials/osnovy_inf/yamp2.doc}; дата обращения: 15.02.2016.
+
+    \bibitem{gutgut:2} 
+    Гутман~Г.~Н. Лабораторные работы по курсу <<Языки и методы программирования>> (семестр 3). URL: \url{http://pm.samgtu.ru/sites/pm.samgtu.ru/files/materials/osnovy_inf/yamp3.doc}; дата обращения: 15.02.2016.
+
+    \bibitem{latex:b1} 
+    Роженко~А.~И. Искусство верстки в \LaTeX'е.  Новосибирск: ИВМиМГ СО~РАН, 2005.
+
+    \bibitem{latex:b2}
+    Балдин~Е.~М. Компьютерная типография \LaTeX.  СПб.: БХВ-Петербург, 2008.
+
+    \bibitem{latex:b3}
+    Котельников~И.~А., Чеботарев~П.~З. \LaTeX\ по русски.
+    Новосибирск: Сибирский хронограф, 2004. 
+
+\end{thebibliography}
+
+%%%%%%%%%%%%%%%%%%%% }}} СПИСОК ЛИТЕРАТУРЫ %%%%%%%%%%%%%%%%%%%%%
+\end{document}
