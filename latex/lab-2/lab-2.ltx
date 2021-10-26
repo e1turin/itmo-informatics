@@ -11,18 +11,27 @@
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage{mathtext}
 \usepackage{indentfirst}
-\usepackage[colorlinks]{hyperref} % использование ссылок
 \usepackage{graphicx}
 \graphicspath{{/home/ivan/itmo/informatics/latex}}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 %\usepackage{bookmark}
 
 \usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref} % использование ссылок
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=magenta,
+    %pdftitle={Overleaf Example},
+    %pdfpagemode=FullScreen,
+}
 \usepackage{listings} % использование листингов
 \usepackage{caption}
 \DeclareCaptionFont{white}{\color{white}} 
 \DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
 %\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
 
 
 
@@ -288,15 +297,13 @@
         \noindent
         Вычисляем значение синдрома:\\
         $S_1 = r_1 \otimes i_1 \otimes i_2 \otimes i_4 = 0 \otimes 1 \otimes 0 \otimes 0 = 1$\\
-        $S_2 = r_2 \otimes i_1 \otimes i_3 \otimes i_4 = 0 \otimes 1 \otimes 1 \otimes 0 = 0$\\
-        $S_3 = r_3 \otimes i_2 \otimes i_3 \otimes i_4 = 1 \otimes 0 \otimes 1 \otimes 0 = 0$\\
+        $S_2 = r_2 \otimes i_1 \otimes i_3 \otimes i_4 = 0 \otimes 1 \otimes 0 \otimes 0 = 1$\\
+        $S_3 = r_3 \otimes i_2 \otimes i_3 \otimes i_4 = 1 \otimes 0 \otimes 0 \otimes 0 = 1$\\
         
         \noindent
-        $(S_1,\ S_2,\ S_3) = (1,\ 0,\ 0)$ --- 1 позиция, ошибка в символе $r_1$\\[2mm]
+        $(S_1,\ S_2,\ S_3) = (1,\ 1,\ 1)$ --- 7 позиция, ошибка в символе $r_1$\\[2mm]
         \noindent
-        Исходное сообщение: 1011000
-
-    
+        Исходное сообщение: 0011001    
 
 
     \Subsection{Вариант 23}
@@ -378,6 +385,9 @@ $r=10:\ 1024>720+10+1$ --- достаточно.\\[2mm]
 Коэфициент избыточности: $k=\cfrac r n = \cfrac {11} {730} \approx 0.0137$\\
 
 \Section{Выполнение задания 4}
+Была написана программа на языке программирования Python, которая на вход из командной строки получает набор из 7 цифр <<0>> и <<1>>, записанных подряд, анализирует это сообщение на основе классического кода Хэмминга (7,4), а затем выдаёт правильное сообщение (только информационные биты) и указывает бит с ошибкой при его наличии.\\
+
+Исходный код программы размещен в личном удаленном репозитории. Её исходный код можно найти по ссылке: \url{https://github.com/e1turin/itmo-informatics/blob/main/lab-2/script.py}.
 
 
 
@@ -392,8 +402,7 @@ $r=10:\ 1024>720+10+1$ --- достаточно.\\[2mm]
 \bibliographystyle{plain}
 
 \begin{thebibliography}{3}
-
-    \addcontentsline{toc}{section}{\arabic{section}. Список литературы}
+    \addcontentsline{toc}{chapter}{Список лиетратуры}
 
     \bibitem{gutgut:1}
     Код Хэмминга. Пример работы алгоритма. URL: \url{https://habr.com/ru/post/140611/};
