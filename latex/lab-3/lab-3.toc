@@ -1,17 +1,10 @@
 \babel@toc {russian}{}
-\contentsline {chapter}{Синтез помехоустойчивого кода}{2}{chapter*.2}%
-\contentsline {section}{1. Задание варианта № 54}{2}{section*.3}%
+\contentsline {chapter}{Регулярные выражения}{2}{chapter*.2}%
+\contentsline {section}{1. Задание варианта № 335047}{2}{section*.3}%
 \contentsline {paragraph}{}{2}{section*.4}%
-\contentsline {paragraph}{}{2}{section*.5}%
-\contentsline {paragraph}{}{2}{section*.6}%
-\contentsline {paragraph}{}{2}{section*.7}%
-\contentsline {section}{2. Выполнение задания 1}{3}{section*.8}%
-\contentsline {subsection}{1. Вариант 39}{3}{section*.10}%
-\contentsline {subsection}{2. Вариант 71}{4}{section*.11}%
-\contentsline {subsection}{3. Вариант 3}{4}{section*.12}%
-\contentsline {subsection}{4. Вариант 23}{4}{section*.13}%
-\contentsline {section}{3. Выполнение задания 2}{5}{section*.14}%
-\contentsline {section}{4. Выполнение задания 3}{6}{section*.16}%
-\contentsline {section}{5. Выполнение задания 4}{6}{section*.17}%
-\contentsline {section}{6. Вывод}{6}{section*.18}%
-\contentsline {chapter}{Список лиетратуры}{7}{chapter*.19}%
+\contentsline {paragraph}{}{3}{section*.5}%
+\contentsline {paragraph}{}{3}{section*.6}%
+\contentsline {section}{2. Выполнение задания 1}{4}{section*.7}%
+\contentsline {section}{3. Выполнение задания 2}{4}{section*.8}%
+\contentsline {section}{4. Выполнение задания 3}{4}{section*.9}%
+\contentsline {section}{5. Вывод}{4}{section*.10}%
