@@ -1,8 +1,8 @@
-/latex/lab-2/*
-!/latex/lab-2/*.ltx
-!/latex/lab-2/*.pdf
-/latex/lab-3/*
-!/latex/lab-3/*.ltx
-!/latex/lab-3/*.pdf
+Docs/latex/lab-2/*
+!Docs/latex/lab-2/*.ltx
+!Docs/latex/lab-2/*.pdf
+Docs/latex/lab-3/*
+!Docs/latex/lab-3/*.ltx
+!Docs/latex/lab-3/*.pdf
 
 .idea/
