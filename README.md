@@ -1,4 +1,4 @@
 # itmo-informatics
 
-- latex-folder with latex files and .pdf docs for labs
+- Docs-folder with reports and supporing files (.pdf | .doc)
 - lab-folders with specific files
