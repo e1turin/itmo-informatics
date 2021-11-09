@@ -1,11 +1,19 @@
 import YAML
+import XML
 
 
 def main():
-    with open("./timetable.yaml", 'r', encoding="UTF-8") as source:
-        #elementTree: dict[str, str | int] = YAML.parse(source)
-        YAML.parse(source)
+    struct: dict = dict()
 
+    with open("./timetable.yaml", 'r', encoding="UTF-8") as source:
+
+        struct = YAML.parse(source)
+
+    # with open("./timetable.xml", 'w', encoding="UTF-8") as output:
+
+        # output.write(XML.create(struct))
+
+    print(struct)
 
 
 if __name__ == '__main__':

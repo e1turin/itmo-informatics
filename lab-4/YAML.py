@@ -1,5 +1,5 @@
 import _io
-import enum
+# import enum
 import exeptions
 
 
@@ -26,9 +26,9 @@ def parseline(line: str) -> dict[str:int, str:int, str:list[int], str:int | str 
     line = line[level:]
 
     divindex = line.find(':')
-    key = line[:divindex]
 
     if divindex != -1:
+        key = line[:divindex]
         linetypes.append(LineType.KEY)
         """
         None
@@ -41,99 +41,158 @@ def parseline(line: str) -> dict[str:int, str:int, str:list[int], str:int | str 
                 break
         """
 
+        # TODO вставка '"' в знаение ключа (удалять только один сивмол кавычек в начале и конце)
         value = line[divindex + 1:].strip()
 
-    if value.isalnum():
-        # value processing
+    if value.isdecimal():  # обработка значения (парсинг числа, строки, пустого значения (None))
+        # TODO парсинг числа с "-", "0x..." нотация
         value = int(value)
     else:
-        value = value.strip('"') or None
+        #TODO пустая строка в значении - не None
+        value = value.strip('"', ) or None
 
-    if value:
+    if value:  # добавление типа строки (имеет значение ключа)
         linetypes.append(LineType.VALUE)
 
     return {"level": level, "types": linetypes, "key": key, "value": value}
 
 
-def _createNode(elements: list, start: int) -> tuple[dict, int]:
-    # функция строит нод (словарь): subtree для элемента в списке с номером start
-    subtree: dict = dict()
-    stop: int = start  # певый элемент в рассмотрении, позже увеличим, рассматриваем следующий за start
+def _createNode(elements: list[dict[str: int, str: list[int], str: str, str: str]], start: int) \
+        -> tuple[dict[dict | list | str], int]:
+    """
+    Вспомогательный метод строит нод subtree (словарь словарей и массивов) для элемента в списке с номером start
+    [0 <= start  <len(elements)]
+
+    находит stop (int) - номер строки, в которой закончена обработка [start < stop <= len(elements)]
+    TODO: must: stop < len(elements)
+
+    возвращает tuple(subtree, stop)
+    """
+
+    subtree: dict = dict()  # новый нод (словарь)
+    stop: int = start  # номер элемент в рассмотрении, всегда больше start, увеличивается в цикле
     subtree.update({elements[start]["key"]: elements[start]["value"]})
     # создаем в пустом subtree элемент из-за которого мы вошли в функцию,
     # инициируем его как {key: value | None}
+    rootelkey: str = elements[start]["key"]
+    # последний добавленный в subtree елемент (предок нового найденного элемента в искомых случаях необходимости)
 
     while stop < len(elements):  # пока не вышли за границы
-        stop += 1
-        if stop < len(elements) and elements[stop]["key"]:  # если не пустая строка, то продолжаем, иначе скипаем
-            if LineType.LISTELEMENT in elements[stop]["types"]:
-                # если текущая рассматриваемая строка - массив
-                el, stop = _createNode(elements, stop)
-                # получили нод - элемент списка и шагнули до следующего элемента списка или понижения уровня
-                if not subtree[elements[start]["key"]]:
-                    # корневой нод не инициализирован (None | "", но пустой строки быть не может)
-                    subtree[elements[start]["key"]] = []
-                try:
-                    print(subtree)
-                    subtree[elements[start]["key"]].append(el)  # добавили в массив сформированный нод
-                except AttributeError:
-                    raise exeptions.YamlFormatError(f"elements: {elements[start]} subtree: {subtree}, el: {el}",
-                                                    f"incorrect yaml-file formatting in line: ±{stop}")
-                except:
-                    print("_____________________subtree[elements[start][key]]?__________")
+        stop += 1  # делаем шаг к следующей строке
+        currstop = stop  # переменная для отладки
 
-            else:  # если текущая рассматриваемая строка не массив, а самостоятельный объект
+        # TODO delete stop < len(elements)
+        if stop < len(elements) and elements[stop]["key"]:  # проверка на пустую строку (отсутсвует ключ перед ":")
+
+            if LineType.LISTELEMENT in elements[stop]["types"]:  # проверка типа строки (является элементом списка)
+                if LineType.LISTELEMENT in elements[start]["types"]:
+                    # проверка для прекращения создания нода,
+                    # срабатывает, когда в ноде списка доходит до начала следующего нода
+                    return subtree, stop
+
+                if not subtree[rootelkey]:
+                    # корневой нод не инициализирован (None) тогда инициализируем массивом
+                    subtree[rootelkey] = []
+
+                # TODO обработка вложенных списков:
+                """ 
+                    | file.yaml:                |
+                    |---------------------------|
+                    |el0:                       |
+                    |  - el1:                   |
+                    |    - el12:                |
+                    |      el13:                | 
+                    |        - el134: "val134"  |
+                    |          el135: "val135"  |
+                    |___________________________|     
+                    
+                    _createNode(...file.yaml...) --(неверное поведение)-> {el0: [{el1: None}, {el2: None, el13: None}, {el134: "val134", el135: "val135"}]}
+                """
+                while stop < len(elements) and LineType.LISTELEMENT in elements[stop]["types"]:
+                    # дополняем массив новыми нодами, пока каждая обработка нода заканчивается на новом элементе списка
+                    el, stop = _createNode(elements, stop)
+                    # получили нод - элемент списка и шагнули до следующего элемента списка или понижения уровня
+
+                    # Обработка неверного формата yaml-файла - TODO
+                    try:
+                        subtree[rootelkey].append(el)  # добавили в массив сформированный нод
+                    except AttributeError:
+                        raise exeptions.YamlFormatError(f" по ключу 'rootelkey': {rootelkey}, пытаюсь .append(el) в subtree[rootelkey]: {subtree[rootelkey]} | cтрою нод для строки start: {start}+1, elements[start]: {elements[start]} | получаю нод subtree: {subtree} | el: {el}",
+                                                        f"incorrect yaml-file formatting in line: ±{currstop}, may be in line: ±{start},may be other place, idk")
+
+                    except:
+                        print("___________ FINDME ___________")
+
+            else:  # если текущая рассматриваемая строка не начало списка, а самостоятельный объект
                 if elements[stop]["level"] == elements[start]["level"]:
                     # если уровни текущей и строки и той для которой строим нод (корневой) совпадают
                     subtree.update({elements[stop]["key"]: elements[stop]["value"]})
                     # добавляем рассматриваемый элемент в корневой нод
+                    rootelkey = elements[stop]["key"]  # обновили ключ последнего элемента в списке
+
+                # TODO: обработка вложенных листов
                 elif elements[stop]["level"] > elements[start]["level"]:
                     # если рассматриваемы нод - потомок предыдущего
                     el, stop = _createNode(elements, stop)
                     # создаем новый нод и шагаем до следующего элемента в текущем объекте или в до братского нода
 
-                    rootelkey = tuple(subtree.keys())[-1]  # последний добавленный в subtree елемент - предок найденного
                     subtree.update({rootelkey: el})  # добавляем потомка нашему текущему элементу в корневом ноде
 
-                elif elements[stop]["level"] < elements[start]["level"] or LineType.LISTELEMENT in elements[stop]["types"]:
-                    # если (уровень седующего меньше - встретили прародственника) или (встретили другой список)
-                    # ! рассматриваем всегда непустой элемент
+                elif elements[stop]["level"] < elements[start]["level"]:
+                    # встретили прародственника - обрабатываемый нод закончился
                     return subtree, stop
 
 
     return subtree, stop
 
 
-def createDict(elements: list) -> dict:
-    tree = dict()
-    tree.update({'__DATA__': None})
+def _createDict(elements: list[dict[str: int, str: list[int], str: str, str: str]]) -> dict[dict | list]:
+    """
+    Вспомогательный метод получает список подготовленных строк формата: dict({"level": int, "types": list[int], "key": str, "value": str})
 
-    for i in range(len(elements)):
+    Возвращает дерево построенное по заданным строкам
+    """
+    tree: dict = dict()  # инициализируем дерево
+    tree.update({'__DATA__': None})  # создаем корневой элемент (необходимо для поддержки неименованных списков)
+
+    for i in range(len(elements)):  # пропускаем все пустые строки (не имеющие ключа)
         if not elements[i]["key"]:
             continue
         else:
             # строим дерево для первого ненулевого элементра
-            tree['__DATA__'] = _createNode(elements, i)[0]
+            tree['__DATA__'], _ = _createNode(elements, i)  # запускаем рекурсивное создание нодов
             break
 
     return tree
 
 
-def parse(file: str | _io.TextIOWrapper) -> dict | None:
-    elementTree = dict()
-    elements = []
+def parse(file: _io.TextIOWrapper | str) -> dict[dict | list] | None:
+    """
+    Метод для парсинга структуры данных из фацла YAML
+    получает на вход объект файла или строку
+    TODO: работа со входной строкой
 
-    if type(file).__name__ == "TextIOWrapper":
+    возвращает словарь словарей и массивов, где в единственном элементе с ключом '__DATA__'
+    находится обработанная структура
+    """
+
+    elementTree: dict = dict()
+    elements: list = []
+
+    if type(file).__name__ == "TextIOWrapper":  # Определение типа входных данных
         for line in file.readlines():
             elements.append(parseline(line))
 
-
+    # TODO:
     elif type(file).__name__ == "str":
-        pass
-    else:
+        print("TODO")
         return None
 
-    elementTree = createDict(elements)
-    for i in elements:
-        print(i)
-    print(elementTree)
+    else:
+        print("Wrong input type")
+        return None
+
+    elementTree = _createDict(elements)
+    # запуск вспомогательного метода для создания словаря по обработанным строкам
+
+    return elementTree
