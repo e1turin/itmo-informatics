@@ -14,6 +14,7 @@ def main():
         # output.write(XML.create(struct))
 
     print(struct)
+    XML.create(struct)
 
 
 if __name__ == '__main__':

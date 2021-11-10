@@ -85,7 +85,8 @@ def _createNode(elements: list[dict[str: int, str: list[int], str: str, str: str
         if stop < len(elements) and elements[stop]["key"]:  # проверка на пустую строку (отсутсвует ключ перед ":")
 
             if LineType.LISTELEMENT in elements[stop]["types"]:  # проверка типа строки (является элементом списка)
-                if LineType.LISTELEMENT in elements[start]["types"]:
+                if LineType.LISTELEMENT in elements[start]["types"] and \
+                        elements[start]["level"] == elements[stop]["level"]:
                     # проверка для прекращения создания нода,
                     # срабатывает, когда в ноде списка доходит до начала следующего нода
                     return subtree, stop
@@ -136,11 +137,28 @@ def _createNode(elements: list[dict[str: int, str: list[int], str: str, str: str
                     el, stop = _createNode(elements, stop)
                     # создаем новый нод и шагаем до следующего элемента в текущем объекте или в до братского нода
 
+
+
                     subtree.update({rootelkey: el})  # добавляем потомка нашему текущему элементу в корневом ноде
 
+                # TODO this for example vvv
                 elif elements[stop]["level"] < elements[start]["level"]:
-                    # встретили прародственника - обрабатываемый нод закончился
+                # встретили прародственника - обрабатываемый нод закончился
                     return subtree, stop
+                # TODO examaple:
+                """ 
+                    | file.yaml:                |
+                    |---------------------------|
+                    |el0:                       |
+                    |  - el01: "val01"          |
+                    |el1:                       |
+                    |  - el12: "val12"          | 
+                    |    el13: "val13"          |
+                    |    el14: "val14"          |
+                    |___________________________|     
+
+                    _createNode(...file.yaml...) --(неверное поведение)-> {el0: [{el1: "val01"}, {el12: "val12", el13: "val13", el14: "val14"}]}
+                """
 
 
     return subtree, stop
