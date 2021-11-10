@@ -1,7 +1,7 @@
 import Exeptions
 
 
-def cleartext(text: str):
+def cleartext(text: str) -> None:
     if not text:
         raise Exeptions.InputError(f"Input text: '{text}'", "Write not empty text or use 'main' function in module")
     return main(text)
