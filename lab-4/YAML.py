@@ -4,14 +4,28 @@ import exeptions
 
 
 # TODO extends from enum.Enum
-class LineType():
+class LineType:
     KEY = 1
     VALUE = 2
     LISTELEMENT = 3
 
 
-def parseline(line: str) -> dict[str:int, str:int, str:list[int], str:int | str | None]:
-    # returns tuple with line level, list of types, key, value
+def parseline(line: str) \
+        -> dict[str:int, str:int, str:list[int], str:int | str | None]:
+    """
+    Метод получает строку из YAML файла, преобразует ее в картежу в формате:
+    (уровень строки, список типов строки, ключ, значение)
+
+    Уровень строки - размер отступа от начала строки (количество побелов)
+    Список типов - свойства, которыми обладает строка (имеет ключ, имееет значение, является первым элементом списка)
+    Ключ - ключ элемента в YAML файле в текущей строке
+    Значение - значение элемента в YAML файле (None, если в строке посде ":" ничего смыслового не следует)
+
+    возвращает словарь содержащий соответственно ключам "level", "types", "key", "value"
+    - уровень строки, список типов, ключ, значение
+    """
+
+    # Инициализация
     line = line.rstrip()
     level = None
     linetypes = []
@@ -48,8 +62,8 @@ def parseline(line: str) -> dict[str:int, str:int, str:list[int], str:int | str 
         # TODO парсинг числа с "-", "0x..." нотация
         value = int(value)
     else:
-        #TODO пустая строка в значении - не None
-        value = value.strip('"', ) or None
+        # TODO пустая строка в значении - не None
+        value = value.strip('"') or None
 
     if value:  # добавление типа строки (имеет значение ключа)
         linetypes.append(LineType.VALUE)
@@ -61,7 +75,7 @@ def _createNode(elements: list[dict[str: int, str: list[int], str: str, str: str
         -> tuple[dict[dict | list | str], int]:
     """
     Вспомогательный метод строит нод subtree (словарь словарей и массивов) для элемента в списке с номером start
-    [0 <= start  <len(elements)]
+    [0 <= start < len(elements)]
 
     находит stop (int) - номер строки, в которой закончена обработка [start < stop <= len(elements)]
     TODO: must: stop < len(elements)
@@ -118,8 +132,9 @@ def _createNode(elements: list[dict[str: int, str: list[int], str: str, str: str
                     try:
                         subtree[rootelkey].append(el)  # добавили в массив сформированный нод
                     except AttributeError:
-                        raise exeptions.YamlFormatError(f" по ключу 'rootelkey': {rootelkey}, пытаюсь .append(el) в subtree[rootelkey]: {subtree[rootelkey]} | cтрою нод для строки start: {start}+1, elements[start]: {elements[start]} | получаю нод subtree: {subtree} | el: {el}",
-                                                        f"incorrect yaml-file formatting in line: ±{currstop}, may be in line: ±{start},may be other place, idk")
+                        raise exeptions.YamlFormatError(
+                            f" по ключу 'rootelkey': {rootelkey}, пытаюсь .append(el) в subtree[rootelkey]: {subtree[rootelkey]} | cтрою нод для строки start: {start}+1, elements[start]: {elements[start]} | получаю нод subtree: {subtree} | el: {el}",
+                            f"incorrect yaml-file formatting in line: ±{currstop}, may be in line: ±{start},may be other place, idk")
 
                     except:
                         print("___________ FINDME ___________")
@@ -137,13 +152,11 @@ def _createNode(elements: list[dict[str: int, str: list[int], str: str, str: str
                     el, stop = _createNode(elements, stop)
                     # создаем новый нод и шагаем до следующего элемента в текущем объекте или в до братского нода
 
-
-
                     subtree.update({rootelkey: el})  # добавляем потомка нашему текущему элементу в корневом ноде
 
                 # TODO this for example vvv
                 elif elements[stop]["level"] < elements[start]["level"]:
-                # встретили прародственника - обрабатываемый нод закончился
+                    # встретили прародственника - обрабатываемый нод закончился
                     return subtree, stop
                 # TODO examaple:
                 """ 
@@ -159,7 +172,6 @@ def _createNode(elements: list[dict[str: int, str: list[int], str: str, str: str
 
                     _createNode(...file.yaml...) --(неверное поведение)-> {el0: [{el1: "val01"}, {el12: "val12", el13: "val13", el14: "val14"}]}
                 """
-
 
     return subtree, stop
 
