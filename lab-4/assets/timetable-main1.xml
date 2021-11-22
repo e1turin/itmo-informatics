@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<timetable>
+	<days>
+		<day>Пт</day>
+		<classes>
+			<time>10:00-11:30</time>
+			<parity>четная неделя</parity>
+			<building>ул.Ломоносова, д.9, лит. М</building>
+			<classroom>актовый зал</classroom>
+			<title>Основы профессиональной деятельности(Лек)</title>
+			<teacher>Клименков Сергей Викторович</teacher>
+			<format>Очно - дистанционный</format>
+		</classes>
+		<classes>
+			<time>11:40-13:10</time>
+			<parity>четная неделя</parity>
+			<building>ул.Ломоносова, д.9, лит. М</building>
+			<classroom>актовый зал</classroom>
+			<title>Программирование(Лек)</title>
+			<teacher>Письмак Алексей Евгеньевич</teacher>
+			<format>Очно - дистанционный</format>
+		</classes>
+	</days>
+</timetable>
+

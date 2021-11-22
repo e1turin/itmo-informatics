@@ -16,7 +16,7 @@ class YamlFormatError(Error):
 
 
 class DataFormatError(Error):
-    """Exception raised for errors in the data format.
+    """Exception raised for errors in the assets format.
 
     Attributes:
         expression -- input expression in which the error occurred

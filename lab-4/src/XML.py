@@ -69,10 +69,11 @@ def create(elements: dict, root: str = "", file: _io.TextIOWrapper = None, singl
     elementsroot = list(elements.keys())
     if len(elementsroot) > 1:
         raise exeptions.DataFormatError("elements keys: " + str(elements.keys()),
-                                        'Wrong data format, too much root points, should be 1 called "__DATA__"')
+                                        'Wrong assets format, too much root points, should be 1 called "__DATA__"')
     if elementsroot[0] != "__DATA__":
         print(exeptions.Warn("Elements root point: " + str(elementsroot[0]),
                              "Warning! non-standard format ('__DATA__')"))
     tree = {root: elements[elementsroot[0]]}
 
+    print('<?xml version = "1.0" ?>', file=file)
     return _print(None, tree, file, makesinglestring=singlestring)

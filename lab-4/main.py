@@ -1,17 +1,15 @@
-import YAML
-import XML
-import exeptions
+from src import YAML, XML
 
 
 def main():
     struct: dict = dict()
 
-    with open("./timetable.yaml", 'r', encoding="UTF-8") as source:
+    with open("assets/timetable.yaml", 'r', encoding="UTF-8") as source:
         struct = YAML.parse(source)
 
-    with open("./timetable.xml", 'w', encoding="UTF-8") as output:
+    with open("assets/timetable.xml", 'w', encoding="UTF-8") as output:
         # print(struct)
-        XML.create(elements=struct, root="", file=output)  # , singlestring=True))
+        XML.create(elements=struct, root="", file=output, singlestring=False)
 
 
 if __name__ == '__main__':
