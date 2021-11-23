@@ -1,7 +1,8 @@
+from src import exceptions
 import _io
 # import enum
-import exeptions
 import re
+
 
 
 # TODO extends from enum.Enum
@@ -135,7 +136,7 @@ def _createNode(elements: list[dict[str: int, str: list[int], str: str, str: str
                     try:
                         subtree[rootelkey].append(el)  # добавили в массив сформированный нод
                     except AttributeError:
-                        raise exeptions.YamlFormatError(
+                        raise exceptions.YamlFormatError(
                             f" по ключу 'rootelkey': {rootelkey}, пытаюсь .append(el) в subtree[rootelkey]: {subtree[rootelkey]} | cтрою нод для строки start: {start}+1, elements[start]: {elements[start]} | получаю нод subtree: {subtree} | el: {el}",
                             f"incorrect yaml-file formatting in line: ±{currstop}, may be in line: ±{start},may be other place, idk")
 

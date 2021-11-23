@@ -1,6 +1,5 @@
 import _io
-
-import exeptions
+from src import exceptions
 
 
 def _print(key: str | None, value: int | str | dict | list | None, output: _io.TextIOWrapper = None,
@@ -68,10 +67,10 @@ def create(elements: dict, root: str = "", file: _io.TextIOWrapper = None, singl
 
     elementsroot = list(elements.keys())
     if len(elementsroot) > 1:
-        raise exeptions.DataFormatError("elements keys: " + str(elements.keys()),
+        raise exceptions.DataFormatError("elements keys: " + str(elements.keys()),
                                         'Wrong assets format, too much root points, should be 1 called "__DATA__"')
     if elementsroot[0] != "__DATA__":
-        print(exeptions.Warn("Elements root point: " + str(elementsroot[0]),
+        print(exceptions.Warn("Elements root point: " + str(elementsroot[0]),
                              "Warning! non-standard format ('__DATA__')"))
     tree = {root: elements[elementsroot[0]]}
 
