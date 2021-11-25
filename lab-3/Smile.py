@@ -26,7 +26,7 @@ def main() -> None:
 
         label = tkinter.Label(window, text=smile, font=("Arial Bold", 100))
 
-        label.grid(column=2, row=1)
+        label.grid(column=1, row=1)
 
         window.mainloop()
 
