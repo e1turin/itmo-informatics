@@ -1,0 +1,207 @@
+
+%>>>>>>>>>>>>>>>>>> ПРЕАМБУЛА >>>>>>>>>>>>>>>>>>>>
+
+\documentclass[12pt,final,oneside]{extreport}
+
+%>>>>> Разметка документа
+\usepackage[a4paper, mag=1000, left=0.13\textwidth, right=0.1\textwidth, top=1.3cm, bottom=1.3cm, headsep=0.7cm, footskip=1cm]{geometry} % По ГОСТу: left>=3cm, right=1cm, top=2cm, bottom=2cm,
+\linespread{0.7} % межстройчный интервал по ГОСТу := 1.5
+%<<<<< Разметка документа
+
+%>>>>> babel c языковым пакетом НЕ должны быть первым импортируемым пакетом
+\usepackage[utf8]{inputenc}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[russian]{babel}
+%<<<<<
+
+%>>>>>> Для верски журнала
+\usepackage{caption} % multicols не умеют в вставку table и figure поэтому описание для них отдельно, сами tabular можно завернуть в {centre}
+
+\usepackage{blindtext} % Текст "рыба" - lorem ipsum...
+
+\usepackage{multirow} % для создания многострочных ячеек таблицы
+\usepackage{array}
+\usepackage{diagbox}
+
+%>>> верстка в 2 колонки
+\usepackage{multicol} % многоколоночная верстка
+\setlength{\columnsep}{.15\textwidth} % определение ширины разделителя между колонками
+\usepackage{tikz} % пакет для векторной графики, чтобы рисовать красивый разделитель колонок
+\usetikzlibrary{arrows.meta,decorations.pathmorphing,backgrounds,positioning,fit,petri}
+\usepackage{multicolrule} % Для кастомизации разделителя колонок
+\SetMCRule{                     % кастомизация разделителя колонок multicolrule
+    width=2pt,
+    custom-line={               % Tikz код для кастомизации линии разделителя
+        \draw [                 % Рисовать
+            decorate,           % декорированную (требуются спец настройки пакетов tikz (см. импорт выше)
+            decoration={        % вид декорирования
+                snake, % Тип - змейка (волнистая)
+                amplitude=.5mm, % ширина волн
+                pre length=0mm, % участок прямой линии от начала
+                %segment length=0mm, % учасок волнистой линии
+                post length=0mm % участок прямой линии от конца
+            },
+            line width=1pt,
+            step=10pt
+        ] 
+        (TOP) to (BOT); % сверху и до низа колонки
+    }, 
+    extend-top=-5pt, % Вылезти за верхнюю границу колонки 
+    extend-bot=-7pt % Вылезти за нижнюю границу колонки  
+}
+%<<< верстка в 2 колонки
+
+%>>>...>> прочие полезные пакеты (математика, графика)
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathtext}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\graphicspath{{/home/ivan/itmo/informatics/latex}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+%\usepackage{bookmark}
+
+% \usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}  % Использование ссылок
+\hypersetup{%  % Настройка разметки ссылок
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=magenta,
+    %pdftitle={Overleaf Example},
+    %pdfpagemode=FullScreen,
+}
+%<<<<<< Для верстки журнала
+
+
+
+%>>>>> Использование листингов
+\usepackage{listings} 
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}} 
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white} % Настройка вида описаний
+\lstset{  % Настройки вида листинга
+inputencoding=utf8, extendedchars=\true, keepspaces = true, % поддержка кириллицы и пробелов в комментариях
+language={},            % выбор языка для подсветки (здесь это Pascal)
+basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+numbers=left,               % где поставить нумерацию строк (слева\справа)
+numberstyle=\tiny,          % размер шрифта для номеров строк
+stepnumber=1,               % размер шага между двумя номерами строк
+numbersep=5pt,              % как далеко отстоят номера строк от подсвечиваемого кода
+backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+showspaces=false,           % показывать или нет пробелы специальными отступами
+showstringspaces=false,     % показывать илигнет пробелы в строках
+showtabs=false,             % показывать или нет табуляцию в строках
+frame=single,               % рисовать рамку вокруг кода
+tabsize=2,                  % размер табуляции по умолчанию равен 2 пробелам
+captionpos=t,               % позиция заголовка вверху [t] или внизу [b] 
+breaklines=true,            % автоматически переносить строки (да\нет)
+breakatwhitespace=false,    % переносить строки только если есть пробел
+escapeinside={\%*}{*)}      % если нужно добавить комментарии в коде
+}
+%<<<<< Использование листингов
+
+\sloppy % Решение проблем с переносами (с. 119 книга Львовского)
+\emergencystretch=25pt
+
+
+%>>>>>>>>>>>>>>>> КОМАНДЫ {Для соответствия ГОСТ} >>>>>>>>>>>>>>
+
+\newcommand\Chapter[3]{%
+    % Принимает 3 аргумента - название главы и дополнительный заголовок и ширина загловка (можно ничего)
+    \refstepcounter{chapter}%
+        %\hfill % заполнение отступом пространства до заголовка
+    \chapter*{%
+        \begin{minipage}{#3\textwidth} % Можно изменить ширину министраницы (заголовка)
+            \flushleft % Выранивание заголовка по левому краю параграфа (заголовка)
+            %\flushright % Выранивание заголовка по правому краю параграфа (заголовка)
+            \begin{huge}%
+                % Отключена нумерация глав в тексте:
+                %:=% \textbf{\chaptername\ \arabic{chapter}\\}
+                \textbf{#1}% Первый заголовок
+            \end{huge}%
+            \\[2mm]% Перенос сторки
+            \begin{Huge}
+                \textbf{#2}% Второй заголовок
+            \end{Huge}
+        \end{minipage}
+    }%
+    % Отключена нумерация для chapter в toc (table of contents), т.е. Оглавлении (Содержании):
+    %:=% \addcontentsline{toc}{chapter}{\arabic{chapter}. #1}
+    % Представление главы в содержании:
+    \addcontentsline{toc}{chapter}{#1. #2.}%
+}
+
+
+\newcommand\Section[1]{
+    % Принимает 1 аргумент - название секции
+    \refstepcounter{section}
+    \section*{%
+        \raggedright
+        % Отключена дополнительная нумерация chapter в section в тексте документа:
+        %:=% \arabic{chapter}.\arabic{section}. #1}
+        % Отключена любая нумарация section в тексте документа: (убрать \arabic{section}, оставить название секции)
+        \arabic{section}. #1
+    }
+    
+    % Отключена дополнительная нумерация chapter в section в toc (table of contents) Оглавлении (Содержании):
+    %:=% \addcontentsline{toc}{section}{\arabic{chapter}.\arabic{section}. #1}
+    \addcontentsline{toc}{section}{\arabic{section}. #1} 
+}
+
+
+\newcommand\Subsection[1]{
+    % Принимает 1 аргумент - название подсекции
+    \refstepcounter{subsection}
+    \subsection*{%
+        \raggedright%
+        % Отключена дополнительная нумерация chapter в section в тексте документа (можно добавить отступ с помощью \hspace*{12pt}):
+        %:=% \arabic{chapter}.\arabic{section}.\arabic{subsection}. #1}
+        \arabic{section}. \arabic{subsection}. #1
+    }
+    % Отключена дополнительная нумерация chapter в section в Оглавлении (Содержании):
+    %\addcontentsline{toc}{subsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}. #1}
+    \addcontentsline{toc}{subsection}{\arabic{subsection}. #1}
+}
+
+\newcommand\Figure[4]{
+    % Принимает 4 аргумента - название файла изображения, ее размер в тексте, описание, лэйбл (псевдоним в формате "fig:name") 
+
+    \refstepcounter{figure}
+    \begin{figure}[ht]
+        \begin{center}
+            \includegraphics[width=#2]{#1}
+        \end{center}
+        %\caption{#3}
+        \begin{center}
+            #3%
+        \end{center}
+        \label{fig:#4}
+    \end{figure}
+}
+
+\newcommand\TableFigure[3]{ % multicols не умеют в table и figure, поэтому приходится извращаться % вставка таблицы с меткой рисунка
+    %
+    % Принимает 3 аргумента --- содержание таблицы(#3), ее описание(#3), лэйбл name(#2) (псевдоним в формате "tab:name") 
+    %
+    \begin{center}
+        \refstepcounter{figure}
+        \label{tab:#1}% лэйбл таблицы
+         #3% Содержание таблицы
+        % 
+        % \captionof*{figure}{\flushleft \textsc\textbf{Рис. 1.}}
+        \begin{flushleft}
+            \textsf{\textbf{Рис. \arabic{figure}. #2}\\[8mm]} % Описание к картинке
+        \end{flushleft}
+    \end{center}
+}
+
+
+
+
+
+
+
+
+%<<<<<<<<<<<<<<<<<<<<<<<<<<<< КОМАНДЫ <<<<<<<<<<<<<<<<<<<<<<<<<<
